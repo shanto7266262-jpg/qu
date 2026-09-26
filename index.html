@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>টাইম-লকড সিক্রেট ভল্ট</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" onclick="location.hash=''; location.reload();" class="flex items-center space-x-2 text-indigo-400 font-bold text-xl">
+                <i class="fa-solid fa-vault"></i>
+                <span>TimeVault</span>
+            </a>
+            <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-medium">
+                <i class="fa-solid fa-shield-halved mr-1"></i> সিকিউরড ভল্ট
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-4 py-8 w-full flex-grow">
+
+        <!-- Home / Create View -->
+        <div id="create-view" class="space-y-6">
+            <div class="text-center space-y-2">
+                <h1 class="text-3xl font-extrabold tracking-tight text-white">টাইম-লকড ভল্ট তৈরি করুন</h1>
+                <p class="text-slate-400 text-sm">নির্দিষ্ট সময় ও পাসওয়ার্ড দিয়ে টেক্সট, লিংক, ইমেজ বা ফাইল লক করুন এবং লিংক শেয়ার করুন।</p>
+            </div>
+
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+                <!-- Secret Content Input -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        <i class="fa-solid fa-pen-to-square text-indigo-400 mr-1"></i> গোপন বার্তা, লিংক বা টেক্সট
+                    </label>
+                    <textarea id="vault-text" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition" placeholder="এখানে আপনার সিক্রেট টেক্সট বা গুরুত্বপূর্ণ লিংক লিখুন..."></textarea>
+                </div>
+
+                <!-- File / Image Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        <i class="fa-solid fa-file-arrow-up text-indigo-400 mr-1"></i> ছবি বা ফাইল যুক্ত করুন (ঐচ্ছিক)
+                    </label>
+                    <input type="file" id="vault-file" class="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 file:cursor-pointer cursor-pointer bg-slate-900 border border-slate-700 rounded-xl">
+                    <p class="text-xs text-slate-500 mt-1">সর্বোচ্চ ২ মেগাবাইট পর্যন্ত ফাইল আপলোড করা যাবে।</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Timer Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            <i class="fa-solid fa-clock text-indigo-400 mr-1"></i> ভল্ট খোলার সময়কাল
+                        </label>
+                        <select id="vault-timer" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                            <option value="300">৫ মিনিট</option>
+                            <option value="3600" selected>১ ঘণ্টা</option>
+                            <option value="86400">১ দিন</option>
+                            <option value="259200">৩ দিন</option>
+                            <option value="432000">৫ দিন</option>
+                            <option value="864000">১০ দিন</option>
+                        </select>
+                    </div>
+
+                    <!-- Password Protection -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            <i class="fa-solid fa-key text-indigo-400 mr-1"></i> পাসওয়ার্ড সুরক্ষা (ঐচ্ছিক)
+                        </label>
+                        <input type="password" id="vault-password" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="গোপন পাসওয়ার্ড দিন">
+                    </div>
+                </div>
+
+                <!-- Create Button -->
+                <button onclick="createVault()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl transition shadow-lg shadow-indigo-600/20 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>ভল্ট লক করুন এবং লিংক তৈরি করুন</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Result / Share View (Hidden Initially) -->
+        <div id="result-view" class="hidden space-y-6">
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5 text-center">
+                <div class="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-2xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white">ভল্ট সফলভাবে তৈরি হয়েছে!</h2>
+                <p class="text-sm text-slate-400">নিচের লিংকটি কপি করে যার সাথে শেয়ার করতে চান তাকে পাঠান। নির্দিষ্ট সময় পার হওয়ার আগে কেউ এটি খুলতে পারবে না।</p>
+                
+                <div class="flex items-center space-x-2 bg-slate-900 border border-slate-700 rounded-xl p-2">
+                    <input type="text" id="share-link-input" readonly class="w-full bg-transparent border-0 text-sm text-indigo-300 px-2 focus:outline-none">
+                    <button onclick="copyShareLink()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-1">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>কপি</span>
+                    </button>
+                </div>
+                
+                <button onclick="location.hash=''; location.reload();" class="text-sm text-slate-400 hover:text-white underline">
+                    새로운 ভল্ট তৈরি করুন
+                </button>
+            </div>
+        </div>
+
+        <!-- Locked / Unlock View (Loaded via URL Hash) -->
+        <div id="vault-view" class="hidden space-y-6">
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-xl text-center space-y-6">
+                <div id="status-icon" class="w-20 h-20 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center justify-center mx-auto text-amber-400 text-3xl">
+                    <i class="fa-solid fa-hourglass-half animate-pulse"></i>
+                </div>
+                
+                <div class="space-y-2">
+                    <h2 id="vault-status-title" class="text-2xl font-bold text-white">ভল্টটি লক করা আছে</h2>
+                    <p id="vault-status-desc" class="text-sm text-slate-400">নির্ধারিত সময় পূর্ণ হওয়ার পর সিক্রেট ডাটা দেখতে পাবেন।</p>
+                </div>
+
+                <!-- Countdown Timer Display -->
+                <div id="countdown-box" class="grid grid-cols-4 gap-3 max-w-md mx-auto py-3">
+                    <div class="bg-slate-900 border border-slate-700 p-3 rounded-xl">
+                        <span id="days" class="text-2xl font-bold text-indigo-400">00</span>
+                        <p class="text-xs text-slate-500">দিন</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700 p-3 rounded-xl">
+                        <span id="hours" class="text-2xl font-bold text-indigo-400">00</span>
+                        <p class="text-xs text-slate-500">ঘণ্টা</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700 p-3 rounded-xl">
+                        <span id="minutes" class="text-2xl font-bold text-indigo-400">00</span>
+                        <p class="text-xs text-slate-500">মিনিট</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700 p-3 rounded-xl">
+                        <span id="seconds" class="text-2xl font-bold text-indigo-400">00</span>
+                        <p class="text-xs text-slate-500">সেকেন্ড</p>
+                    </div>
+                </div>
+
+                <!-- Password Prompt (If locked with password) -->
+                <div id="password-prompt-box" class="hidden max-w-sm mx-auto space-y-3 pt-2">
+                    <p class="text-sm text-amber-400"><i class="fa-solid fa-key mr-1"></i> এই ভল্টটি পাসওয়ার্ড দিয়ে সুরক্ষিত।</p>
+                    <div class="flex space-x-2">
+                        <input type="password" id="unlock-password" placeholder="পাসওয়ার্ড দিন" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <button onclick="verifyPassword()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 rounded-xl text-sm font-medium">খুলুন</button>
+                    </div>
+                </div>
+
+                <!-- Revealed Content Box (Hidden initially) -->
+                <div id="revealed-content" class="hidden text-left space-y-4 pt-4 border-t border-slate-800">
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">সংরক্ষিত টেক্সট / লিংক:</label>
+                        <div id="display-text" class="bg-slate-900 border border-slate-700 rounded-xl p-4 text-sm text-white whitespace-pre-wrap break-all"></div>
+                    </div>
+                    
+                    <div id="display-file-container" class="hidden space-y-2">
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">সংরক্ষিত ফাইল / ইমেজ:</label>
+                        <div id="display-file-preview" class="bg-slate-900 border border-slate-700 rounded-xl p-4 flex items-center justify-between">
+                            <span id="file-name" class="text-sm text-indigo-300 truncate mr-2"></span>
+                            <a id="file-download-btn" href="#" download class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-1 shrink-0">
+                                <i class="fa-solid fa-download"></i>
+                                <span>ডাউনলোড</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        <p>&copy; 2026 TimeVault. সুরক্ষিত এবং এনক্রিপ্টেড টাইম-লক সিস্টেম।</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Simple base64 encoder/decoder supporting UTF-8
+        function encodeData(data) {
+            return btoa(encodeURIComponent(JSON.stringify(data)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+
+        function decodeData(encoded) {
+            return JSON.parse(decodeURIComponent(Array.prototype.map.call(atob(encoded), function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join('')));
+        }
+
+        function createVault() {
+            const text = document.getElementById('vault-text').value.trim();
+            const timerSec = parseInt(document.getElementById('vault-timer').value);
+            const password = document.getElementById('vault-password').value;
+            const fileInput = document.getElementById('vault-file');
+
+            if (!text && fileInput.files.length === 0) {
+                alert('দয়া করে কিছু টেক্সট লিখুন অথবা একটি ফাইল সিলেক্ট করুন।');
+                return;
+            }
+
+            const unlockTime = Date.now() + (timerSec * 1000);
+
+            const processVaultData = (fileData, fileName) => {
+                const vaultObj = {
+                    t: text,
+                    u: unlockTime,
+                    p: password ? btoa(password) : '',
+                    f: fileData || '',
+                    fn: fileName || ''
+                };
+
+                const encoded = encodeData(vaultObj);
+                const shareUrl = window.location.origin + window.location.pathname + '#' + encoded;
+
+                document.getElementById('create-view').classList.add('hidden');
+                document.getElementById('result-view').classList.remove('hidden');
+                document.getElementById('share-link-input').value = shareUrl;
+            };
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('ফাইলের সাইজ অনেক বড়! দয়া করে ২ মেগাবাইটের কম ফাইল দিন।');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processVaultData(e.target.result, file.name);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                processVaultData();
+            }
+        }
+
+        function copyShareLink() {
+            const input = document.getElementById('share-link-input');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value);
+            alert('লিংকটি ক্লিপবোর্ডে কপি করা হয়েছে!');
+        }
+
+        // Handle URL Hash routing on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                document.getElementById('create-view').classList.add('hidden');
+                document.getElementById('vault-view').classList.remove('hidden');
+                loadVault(hash);
+            }
+        });
+
+        let currentVaultData = null;
+        let timerInterval = null;
+
+        function loadVault(hash) {
+            try {
+                currentVaultData = decodeData(hash);
+                startCountdown();
+            } catch (e) {
+                document.getElementById('vault-status-title').innerText = 'ভল্ট লিংকটি সঠিক নয়';
+                document.getElementById('vault-status-desc').innerText = 'লিংকটি ক্ষতিগ্রস্ত হয়েছে অথবা ভুল।';
+                document.getElementById('status-icon').className = 'w-20 h-20 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center justify-center mx-auto text-rose-400 text-3xl';
+                document.getElementById('status-icon').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                document.getElementById('countdown-box').classList.add('hidden');
+            }
+        }
+
+        function startCountdown() {
+            const now = Date.now();
+            const distance = currentVaultData.u - now;
+
+            if (distance <= 0) {
+                checkPasswordAndReveal();
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+
+            timerInterval = setTimeout(startCountdown, 1000);
+        }
+
+        function checkPasswordAndReveal() {
+            clearTimeout(timerInterval);
+            
+            if (currentVaultData.p) {
+                document.getElementById('vault-status-title').innerText = 'সময় পূর্ণ হয়েছে!';
+                document.getElementById('vault-status-desc').innerText = 'ভল্ট খুলতে পাসওয়ার্ড প্রদান করুন।';
+                document.getElementById('status-icon').innerHTML = '<i class="fa-solid fa-key"></i>';
+                document.getElementById('countdown-box').classList.add('hidden');
+                document.getElementById('password-prompt-box').classList.remove('hidden');
+            } else {
+                revealContent();
+            }
+        }
+
+        function verifyPassword() {
+            const passInput = document.getElementById('unlock-password').value;
+            if (btoa(passInput) === currentVaultData.p) {
+                document.getElementById('password-prompt-box').classList.add('hidden');
+                revealContent();
+            } else {
+                alert('ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।');
+            }
+        }
+
+        function revealContent() {
+            document.getElementById('vault-status-title').innerText = 'ভল্ট আনলক করা হয়েছে!';
+            document.getElementById('vault-status-desc').innerText = 'নিচে আপনার সংরক্ষিত তথ্য দেওয়া হলো।';
+            document.getElementById('status-icon').className = 'w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-3xl';
+            document.getElementById('status-icon').innerHTML = '<i class="fa-solid fa-lock-open"></i>';
+            document.getElementById('countdown-box').classList.add('hidden');
+            document.getElementById('password-prompt-box').classList.add('hidden');
+
+            document.getElementById('revealed-content').classList.remove('hidden');
+            document.getElementById('display-text').innerText = currentVaultData.t || '(কোনো টেক্সট নেই)';
+
+            if (currentVaultData.f) {
+                document.getElementById('display-file-container').classList.remove('hidden');
+                document.getElementById('file-name').innerText = currentVaultData.fn || 'ডাউনলোড ফাইল';
+                document.getElementById('file-download-btn').href = currentVaultData.f;
+                document.getElementById('file-download-btn').download = currentVaultData.fn || 'vault-file';
+            }
+        }
+    </script>
+</body>
+</html>
